@@ -1,0 +1,21 @@
+{
+  "name": "taskflow-database",
+  "version": "1.0.0",
+  "description": "TaskFlow project management app - Database layer with PostgreSQL and Prisma",
+  "main": "src/prisma.js",
+  "scripts": {
+    "prisma:generate": "npx prisma generate",
+    "prisma:migrate": "npx prisma migrate dev",
+    "prisma:studio": "npx prisma studio",
+    "prisma:seed": "node prisma/seed.js",
+    "prisma:reset": "npx prisma migrate reset"
+  },
+  "keywords": ["taskflow", "postgresql", "prisma", "project-management"],
+  "license": "MIT",
+  "dependencies": {
+    "@prisma/client": "^5.20.0"
+  },
+  "devDependencies": {
+    "prisma": "^5.20.0"
+  }
+}

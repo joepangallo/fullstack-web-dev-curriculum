@@ -1,0 +1,57 @@
+// ============================================
+// Session 4 TaskFlow: Prisma Schema
+// ============================================
+// Database schema for the TaskFlow project management application.
+// This defines the User and Task models and their relationship.
+//
+// Commands:
+//   npx prisma migrate dev --name init    Create/apply migrations
+//   npx prisma generate                   Generate the Prisma client
+//   npx prisma studio                     Open visual database browser
+// ============================================
+
+// Database connection configuration
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// Generate JavaScript client for database queries
+generator client {
+  provider = "prisma-client-js"
+}
+
+// ============================================
+// USER MODEL - TaskFlow team members
+// ============================================
+model User {
+  id           Int      @id @default(autoincrement())
+  username     String   @unique @db.VarChar(50)
+  email        String   @unique @db.VarChar(100)
+  passwordHash String   @map("password_hash") @db.VarChar(255)
+  avatarUrl    String?  @map("avatar_url") @db.VarChar(500)
+  createdAt    DateTime @default(now()) @map("created_at")
+
+  // Relation: A user can own many tasks
+  tasks Task[]
+
+  @@map("users")
+}
+
+// ============================================
+// TASK MODEL - Project tasks and to-dos
+// ============================================
+model Task {
+  id          Int      @id @default(autoincrement())
+  title       String   @db.VarChar(255)
+  description String?
+  status      String   @default("pending") @db.VarChar(20)
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @default(now()) @updatedAt @map("updated_at")
+
+  // Relation: Each task belongs to one user
+  userId Int  @map("user_id")
+  user   User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("tasks")
+}

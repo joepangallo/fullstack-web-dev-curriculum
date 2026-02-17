@@ -1,0 +1,40 @@
+/**
+ * =============================================================
+ * PRIVATE ROUTE - Auth Guard
+ * =============================================================
+ *
+ * Protects routes that require authentication.
+ * Shows loading state while checking auth, then either
+ * renders children or redirects to login.
+ * =============================================================
+ */
+
+import { Navigate, useLocation } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
+
+function PrivateRoute({ children }) {
+  const { user, isLoading } = useAuth();
+  const location = useLocation();
+
+  if (isLoading) {
+    return (
+      <div className="loading-container">
+        <p>Loading...</p>
+      </div>
+    );
+  }
+
+  if (!user) {
+    return (
+      <Navigate
+        to="/login"
+        state={{ from: location.pathname }}
+        replace
+      />
+    );
+  }
+
+  return children;
+}
+
+export default PrivateRoute;

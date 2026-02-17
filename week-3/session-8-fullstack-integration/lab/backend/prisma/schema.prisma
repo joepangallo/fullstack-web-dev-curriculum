@@ -1,0 +1,69 @@
+// =============================================================
+// PRISMA SCHEMA - Database Models
+// =============================================================
+//
+// This file defines the database structure using Prisma's schema
+// language. Prisma uses this to:
+//   1. Generate database migrations (SQL changes)
+//   2. Generate the TypeScript/JS client for querying the database
+//   3. Power Prisma Studio (visual database editor)
+//
+// KEY CONCEPTS:
+//   - datasource: Which database to connect to
+//   - generator: How to generate the Prisma Client
+//   - model: A database table definition
+//   - @id: Primary key
+//   - @unique: Unique constraint
+//   - @default: Default value
+//   - @relation: Foreign key relationship
+//   - @updatedAt: Auto-updates on record change
+//
+// AFTER CHANGES:
+//   Run: npx prisma migrate dev --name describe_your_change
+//   This creates a migration and updates the client
+// =============================================================
+
+// Database connection configuration
+// Reads DATABASE_URL from the .env file
+datasource db {
+  provider = "sqlite"    // Using SQLite for simplicity (no setup required)
+  url      = env("DATABASE_URL")
+}
+
+// Client generator - creates the JavaScript/TypeScript client
+generator client {
+  provider = "prisma-client-js"
+}
+
+/// User model - stores authentication and profile data
+/// Each user can have many tasks (one-to-many relationship)
+model User {
+  id        Int      @id @default(autoincrement())  // Auto-incrementing primary key
+  username  String   @unique                         // Must be unique across all users
+  email     String   @unique                         // Must be unique (used for login)
+  password  String                                   // Hashed password (NEVER store plain text!)
+  avatarUrl String?                                  // Optional profile picture URL
+  createdAt DateTime @default(now())                 // Auto-set on creation
+  updatedAt DateTime @updatedAt                      // Auto-updated on changes
+
+  // Relationship: A user has many tasks
+  // "onDelete: Cascade" means deleting a user also deletes their tasks
+  tasks     Task[]
+}
+
+/// Task model - represents a to-do item owned by a user
+/// Each task belongs to exactly one user (many-to-one relationship)
+model Task {
+  id          Int      @id @default(autoincrement())
+  title       String                                 // Task title (required)
+  description String?                                // Optional description
+  status      String   @default("pending")           // "pending", "in_progress", "completed"
+  priority    String   @default("medium")            // "low", "medium", "high"
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // Foreign key: Links this task to a user
+  // userId stores the User's id value
+  userId      Int
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}

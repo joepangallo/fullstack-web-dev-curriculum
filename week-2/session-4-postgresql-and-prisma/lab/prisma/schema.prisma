@@ -1,0 +1,102 @@
+// ============================================
+// Session 4 Lab: Prisma Schema
+// ============================================
+// This file defines your database structure using Prisma's schema language.
+// Prisma uses this to:
+//   1. Generate a type-safe database client (PrismaClient)
+//   2. Create and run database migrations
+//   3. Provide auto-completion in your editor
+//
+// After modifying this file, run:
+//   npx prisma migrate dev --name describe_your_change
+//   npx prisma generate
+// ============================================
+
+// ============================================
+// DATASOURCE: Where is the database?
+// ============================================
+// The datasource block tells Prisma which database to connect to.
+// We use PostgreSQL and load the connection URL from an environment variable.
+// The URL format is: postgresql://USER:PASSWORD@HOST:PORT/DATABASE
+
+datasource db {
+  provider = "postgresql"        // Database type
+  url      = env("DATABASE_URL") // Connection string from .env file
+}
+
+// ============================================
+// GENERATOR: How to generate the client
+// ============================================
+// The generator block tells Prisma what client code to create.
+// "prisma-client-js" generates a JavaScript/TypeScript client
+// that you import in your application code.
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+// ============================================
+// USER MODEL
+// ============================================
+// Each model maps to a database table. The model name becomes the table name
+// (Prisma converts it to lowercase/snake_case: User -> users).
+//
+// Field types:
+//   Int      = integer number
+//   String   = text
+//   DateTime = date and time
+//
+// Attributes (@ decorators):
+//   @id              = primary key
+//   @default(autoincrement()) = auto-incrementing
+//   @unique          = no duplicates allowed
+//   @default(now())  = auto-set to current time
+//   @db.VarChar(n)   = maps to PostgreSQL VARCHAR(n)
+//   @map("col_name") = custom column name in the database
+//   @@map("table")   = custom table name
+
+model User {
+  id           Int      @id @default(autoincrement())
+  username     String   @unique @db.VarChar(50)
+  email        String   @unique @db.VarChar(100)
+  passwordHash String   @map("password_hash") @db.VarChar(255)
+  avatarUrl    String?  @map("avatar_url") @db.VarChar(500) // ? means nullable/optional
+  createdAt    DateTime @default(now()) @map("created_at")
+
+  // ============================================
+  // RELATION: One User has many Tasks
+  // ============================================
+  // This line doesn't create a column in the database.
+  // It tells Prisma about the relationship so you can do:
+  //   prisma.user.findUnique({ include: { tasks: true } })
+  tasks Task[]
+
+  @@map("users") // Map to "users" table (matches our SQL)
+}
+
+// ============================================
+// TASK MODEL
+// ============================================
+model Task {
+  id          Int      @id @default(autoincrement())
+  title       String   @db.VarChar(255)
+  description String?  // Optional field (maps to TEXT in PostgreSQL)
+  status      String   @default("pending") @db.VarChar(20)
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @default(now()) @updatedAt @map("updated_at")
+
+  // ============================================
+  // RELATION: Each Task belongs to one User
+  // ============================================
+  // userId is the foreign key column in the database.
+  // user is the relation field for Prisma queries.
+  // @relation defines how this model connects to User:
+  //   fields: [userId]      = the foreign key column in THIS model
+  //   references: [id]      = the column it points to in the OTHER model
+  //   onDelete: Cascade     = delete tasks when their user is deleted
+
+  userId Int  @map("user_id")
+  user   User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("tasks") // Map to "tasks" table (matches our SQL)
+}

@@ -1,0 +1,173 @@
+/*
+ * App.css - Global Styles for Counter Lab
+ * ----------------------------------------
+ * These styles apply to the entire application.
+ * In a real project, you might use CSS Modules or a library like Tailwind,
+ * but plain CSS is great for learning the fundamentals.
+ */
+
+/* ===== CSS Reset & Base Styles ===== */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box; /* Makes width/height include padding and border */
+}
+
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: #f5f5f5;
+  color: #333;
+  line-height: 1.6;
+}
+
+/* ===== App Layout ===== */
+.app {
+  min-height: 100vh;           /* Full viewport height */
+  display: flex;
+  flex-direction: column;       /* Stack header, main, footer vertically */
+}
+
+/* ===== Header ===== */
+.app-header {
+  background-color: #2563eb;
+  color: white;
+  padding: 1rem 2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.app-header h1 {
+  font-size: 1.5rem;
+}
+
+.nav-placeholder {
+  display: flex;
+  gap: 1.5rem;
+}
+
+.nav-placeholder span {
+  cursor: pointer;
+  opacity: 0.8;
+  transition: opacity 0.2s;
+}
+
+.nav-placeholder span:hover {
+  opacity: 1;
+}
+
+/* ===== Main Content ===== */
+.main-content {
+  flex: 1;                      /* Takes up all available space between header & footer */
+  padding: 2rem;
+  max-width: 800px;
+  margin: 0 auto;               /* Center the content */
+  width: 100%;
+}
+
+.main-content h2 {
+  text-align: center;
+  margin-bottom: 0.5rem;
+  color: #1e40af;
+}
+
+.intro-text {
+  text-align: center;
+  color: #666;
+  margin-bottom: 2rem;
+}
+
+/* ===== Counter Cards ===== */
+.counters-container {
+  display: flex;
+  gap: 2rem;
+  justify-content: center;
+  flex-wrap: wrap;              /* Wraps to next line on small screens */
+}
+
+.counter-card {
+  background: white;
+  border-radius: 12px;
+  padding: 2rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  min-width: 280px;
+  transition: box-shadow 0.2s;
+}
+
+.counter-card:hover {
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+}
+
+.counter-card h3 {
+  color: #374151;
+  margin-bottom: 1rem;
+}
+
+.counter-value {
+  font-size: 3rem;
+  font-weight: bold;
+  color: #2563eb;
+  margin: 1rem 0;
+}
+
+/* ===== Buttons ===== */
+.counter-buttons {
+  display: flex;
+  gap: 0.5rem;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.btn {
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: background-color 0.2s, transform 0.1s;
+}
+
+.btn:hover {
+  transform: translateY(-1px);
+}
+
+.btn:active {
+  transform: translateY(0);
+}
+
+.btn-increment {
+  background-color: #22c55e;
+  color: white;
+}
+
+.btn-increment:hover {
+  background-color: #16a34a;
+}
+
+.btn-decrement {
+  background-color: #ef4444;
+  color: white;
+}
+
+.btn-decrement:hover {
+  background-color: #dc2626;
+}
+
+.btn-reset {
+  background-color: #6b7280;
+  color: white;
+}
+
+.btn-reset:hover {
+  background-color: #4b5563;
+}
+
+/* ===== Footer ===== */
+.app-footer {
+  background-color: #1f2937;
+  color: #9ca3af;
+  text-align: center;
+  padding: 1rem 2rem;
+  margin-top: auto;             /* Pushes footer to the bottom */
+}

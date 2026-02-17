@@ -1,0 +1,303 @@
+/**
+ * =============================================================
+ * TASKFLOW STYLES - Session 9 (with Profile & Avatar Upload)
+ * =============================================================
+ *
+ * Extends Session 8 styles with profile page and avatar components.
+ * =============================================================
+ */
+
+/* ============================================
+   CSS CUSTOM PROPERTIES
+   ============================================ */
+:root {
+  --primary-color: #4f46e5;
+  --primary-hover: #4338ca;
+  --primary-light: #eef2ff;
+  --danger-color: #ef4444;
+  --danger-hover: #dc2626;
+  --success-color: #22c55e;
+  --success-hover: #16a34a;
+  --warning-color: #f59e0b;
+  --text-color: #1f2937;
+  --text-light: #6b7280;
+  --bg-color: #f3f4f6;
+  --card-bg: #ffffff;
+  --border-color: #e5e7eb;
+  --header-bg: #312e81;
+  --header-text: #ffffff;
+  --radius: 8px;
+  --shadow: 0 1px 3px rgba(0, 0, 0, 0.1), 0 1px 2px rgba(0, 0, 0, 0.06);
+  --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.1), 0 4px 6px rgba(0, 0, 0, 0.05);
+}
+
+/* ============================================
+   RESET & BASE
+   ============================================ */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  color: var(--text-color);
+  background-color: var(--bg-color);
+  line-height: 1.6;
+}
+
+/* ============================================
+   LAYOUT
+   ============================================ */
+.app { min-height: 100vh; display: flex; flex-direction: column; }
+.main-content { flex: 1; padding: 2rem 1rem; max-width: 900px; margin: 0 auto; width: 100%; }
+
+/* ============================================
+   HEADER
+   ============================================ */
+.header { background-color: var(--header-bg); color: var(--header-text); padding: 0 1rem; box-shadow: var(--shadow); }
+.header-content { max-width: 900px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; height: 60px; }
+.header-logo { font-size: 1.25rem; font-weight: 700; color: var(--header-text); text-decoration: none; }
+.header-nav { display: flex; align-items: center; gap: 0.75rem; }
+.nav-link { color: var(--header-text); text-decoration: none; padding: 0.5rem 0.75rem; border-radius: var(--radius); transition: background-color 0.2s; font-size: 0.9rem; }
+.nav-link:hover { background-color: rgba(255, 255, 255, 0.1); }
+.nav-link.active { background-color: rgba(255, 255, 255, 0.2); font-weight: 600; }
+.nav-user { color: rgba(255, 255, 255, 0.8); font-size: 0.9rem; }
+
+/* ============================================
+   BUTTONS
+   ============================================ */
+.btn { display: inline-flex; align-items: center; justify-content: center; padding: 0.5rem 1rem; border: none; border-radius: var(--radius); font-size: 0.9rem; font-weight: 500; cursor: pointer; transition: all 0.2s; }
+.btn:disabled { opacity: 0.6; cursor: not-allowed; }
+.btn-primary { background-color: var(--primary-color); color: white; }
+.btn-primary:hover:not(:disabled) { background-color: var(--primary-hover); }
+.btn-danger { background-color: var(--danger-color); color: white; }
+.btn-danger:hover:not(:disabled) { background-color: var(--danger-hover); }
+.btn-cancel { background-color: var(--bg-color); color: var(--text-color); border: 1px solid var(--border-color); }
+.btn-cancel:hover { background-color: var(--border-color); }
+.btn-logout { background-color: transparent; color: var(--header-text); border: 1px solid rgba(255, 255, 255, 0.3); padding: 0.4rem 0.75rem; font-size: 0.85rem; }
+.btn-logout:hover { background-color: rgba(255, 255, 255, 0.1); }
+.btn-block { width: 100%; }
+.btn-sm { padding: 0.3rem 0.6rem; font-size: 0.8rem; }
+.btn-toggle { background-color: var(--success-color); color: white; }
+.btn-toggle:hover { background-color: var(--success-hover); }
+.btn-edit { background-color: var(--primary-color); color: white; }
+.btn-edit:hover { background-color: var(--primary-hover); }
+.btn-delete { background-color: var(--danger-color); color: white; }
+.btn-delete:hover { background-color: var(--danger-hover); }
+
+/* ============================================
+   AUTH PAGES
+   ============================================ */
+.auth-page { display: flex; justify-content: center; padding-top: 2rem; }
+.auth-card { background: var(--card-bg); border-radius: var(--radius); box-shadow: var(--shadow-lg); padding: 2rem; width: 100%; max-width: 420px; }
+.auth-title { text-align: center; margin-bottom: 1.5rem; font-size: 1.5rem; color: var(--primary-color); }
+.auth-form { display: flex; flex-direction: column; gap: 1rem; }
+.auth-footer { text-align: center; margin-top: 1.5rem; font-size: 0.9rem; color: var(--text-light); }
+.auth-footer a { color: var(--primary-color); text-decoration: none; font-weight: 500; }
+.auth-footer a:hover { text-decoration: underline; }
+
+/* ============================================
+   FORM ELEMENTS
+   ============================================ */
+.form-group { display: flex; flex-direction: column; gap: 0.375rem; }
+.form-group label { font-size: 0.875rem; font-weight: 500; }
+.form-group input, .form-group select, .form-group textarea {
+  padding: 0.625rem 0.75rem; border: 1px solid var(--border-color); border-radius: var(--radius);
+  font-size: 0.9rem; font-family: inherit; transition: border-color 0.2s, box-shadow 0.2s; background: white;
+}
+.form-group input:focus, .form-group select:focus, .form-group textarea:focus {
+  outline: none; border-color: var(--primary-color); box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+}
+.form-group input:disabled, .form-group select:disabled, .form-group textarea:disabled { background-color: var(--bg-color); cursor: not-allowed; }
+.form-row { display: flex; gap: 1rem; }
+.form-row .form-group { flex: 1; }
+.form-actions { display: flex; gap: 0.75rem; margin-top: 0.5rem; }
+
+/* ============================================
+   MESSAGES
+   ============================================ */
+.error-message {
+  background-color: #fef2f2; color: var(--danger-color); padding: 0.75rem 1rem;
+  border-radius: var(--radius); border: 1px solid #fecaca; font-size: 0.875rem; margin-bottom: 1rem;
+  display: flex; justify-content: space-between; align-items: center;
+}
+.error-dismiss { background: none; border: none; color: var(--danger-color); cursor: pointer; font-size: 0.8rem; text-decoration: underline; }
+.success-message {
+  background-color: #f0fdf4; color: #15803d; padding: 0.75rem 1rem;
+  border-radius: var(--radius); border: 1px solid #bbf7d0; font-size: 0.875rem; margin-bottom: 1rem;
+}
+
+/* ============================================
+   TASKS PAGE
+   ============================================ */
+.tasks-page { max-width: 800px; margin: 0 auto; }
+.tasks-header { margin-bottom: 1.5rem; }
+.tasks-header h1 { font-size: 1.5rem; margin-bottom: 0.5rem; }
+.task-stats { display: flex; gap: 1rem; flex-wrap: wrap; }
+.stat { font-size: 0.85rem; color: var(--text-light); padding: 0.2rem 0.5rem; background: var(--card-bg); border-radius: 4px; border: 1px solid var(--border-color); }
+.stat-pending { border-color: #fbbf24; color: #92400e; }
+.stat-done { border-color: #4ade80; color: #166534; }
+
+/* Task Input */
+.task-input-container { background: var(--card-bg); border-radius: var(--radius); box-shadow: var(--shadow); padding: 1.5rem; margin-bottom: 1.5rem; }
+.task-input-title { font-size: 1.1rem; margin-bottom: 1rem; }
+.task-input-form { display: flex; flex-direction: column; gap: 0.75rem; }
+
+/* Task Filters */
+.task-filters { display: flex; gap: 0.5rem; margin-bottom: 1rem; flex-wrap: wrap; }
+.filter-btn { padding: 0.4rem 0.75rem; border: 1px solid var(--border-color); border-radius: var(--radius); background: var(--card-bg); color: var(--text-light); cursor: pointer; font-size: 0.85rem; transition: all 0.2s; }
+.filter-btn:hover { border-color: var(--primary-color); color: var(--primary-color); }
+.filter-active { background-color: var(--primary-color); color: white; border-color: var(--primary-color); }
+
+/* Task List */
+.tasks-list { display: flex; flex-direction: column; gap: 0.75rem; }
+.empty-state { text-align: center; color: var(--text-light); padding: 3rem 1rem; background: var(--card-bg); border-radius: var(--radius); box-shadow: var(--shadow); }
+.empty-state h3 { margin-bottom: 0.5rem; color: var(--text-color); }
+
+/* Task Card */
+.task-card { background: var(--card-bg); border-radius: var(--radius); box-shadow: var(--shadow); padding: 1.25rem; border-left: 4px solid var(--primary-color); transition: transform 0.15s, box-shadow 0.15s; }
+.task-card:hover { transform: translateY(-1px); box-shadow: var(--shadow-lg); }
+.task-card.task-completed { border-left-color: var(--success-color); opacity: 0.7; }
+.task-card-header { display: flex; gap: 0.5rem; margin-bottom: 0.5rem; }
+.task-status, .task-priority { font-size: 0.7rem; font-weight: 600; padding: 0.15rem 0.4rem; border-radius: 4px; text-transform: uppercase; }
+.status-pending { background: #fef3c7; color: #92400e; }
+.status-in_progress { background: #dbeafe; color: #1e40af; }
+.status-completed { background: #dcfce7; color: #166534; }
+.priority-low { background: #f0fdf4; color: #15803d; }
+.priority-medium { background: #fffbeb; color: #92400e; }
+.priority-high { background: #fef2f2; color: #991b1b; }
+.task-title { font-size: 1rem; margin-bottom: 0.25rem; }
+.task-completed .task-title { text-decoration: line-through; color: var(--text-light); }
+.task-description { font-size: 0.85rem; color: var(--text-light); margin-bottom: 0.25rem; }
+.task-card-actions { display: flex; gap: 0.5rem; margin-top: 0.75rem; padding-top: 0.75rem; border-top: 1px solid var(--border-color); }
+
+/* ============================================
+   PROFILE PAGE (NEW in Session 9)
+   ============================================ */
+.profile-page {
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.profile-page h1 {
+  font-size: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.profile-card {
+  background: var(--card-bg);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2rem;
+}
+
+.profile-avatar-section {
+  text-align: center;
+}
+
+.profile-info {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.profile-field {
+  padding: 0.75rem 0;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.profile-field:last-child {
+  border-bottom: none;
+}
+
+.profile-field label {
+  display: block;
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-light);
+  margin-bottom: 0.25rem;
+}
+
+.profile-field p {
+  font-size: 1rem;
+  color: var(--text-color);
+}
+
+/* ============================================
+   AVATAR UPLOAD COMPONENT (NEW in Session 9)
+   ============================================ */
+.avatar-upload {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+}
+
+.avatar-display {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  overflow: hidden;
+  border: 3px solid var(--border-color);
+  background-color: var(--bg-color);
+}
+
+.avatar-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.avatar-placeholder {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, var(--primary-light), #e0e7ff);
+  color: var(--primary-color);
+  font-size: 2.5rem;
+  font-weight: 700;
+}
+
+.avatar-actions {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.avatar-file-info {
+  font-size: 0.8rem;
+  color: var(--text-light);
+}
+
+.avatar-error {
+  font-size: 0.8rem;
+  padding: 0.5rem 0.75rem;
+}
+
+.avatar-success {
+  font-size: 0.8rem;
+  padding: 0.5rem 0.75rem;
+}
+
+/* ============================================
+   LOADING
+   ============================================ */
+.loading-container { display: flex; justify-content: center; padding: 4rem 1rem; color: var(--text-light); }
+
+/* ============================================
+   RESPONSIVE
+   ============================================ */
+@media (max-width: 640px) {
+  .header-content { flex-direction: column; height: auto; padding: 0.75rem 0; gap: 0.5rem; }
+  .header-nav { flex-wrap: wrap; justify-content: center; }
+  .form-row { flex-direction: column; }
+  .task-card-actions { flex-wrap: wrap; }
+  .profile-card { padding: 1.5rem; }
+  .avatar-display { width: 100px; height: 100px; }
+}

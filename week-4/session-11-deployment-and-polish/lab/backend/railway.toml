@@ -1,0 +1,29 @@
+# ============================================
+# Railway Deployment Configuration
+# ============================================
+# Railway is a platform for deploying web apps.
+# This file tells Railway how to build and run your app.
+#
+# Railway alternatives: Render, Fly.io, Heroku
+# Each has its own config format, but the concepts are similar.
+#
+# Documentation: https://docs.railway.com/reference/config-as-code
+# ============================================
+
+[build]
+# Use the Dockerfile for building
+builder = "DOCKERFILE"
+# Path to the Dockerfile (relative to this file)
+dockerfilePath = "./Dockerfile"
+
+[deploy]
+# Number of instances to run (1 for hobby projects)
+numReplicas = 1
+# Health check endpoint - Railway pings this to verify the app is running
+healthcheckPath = "/api/health"
+# How long to wait for the health check (in seconds)
+healthcheckTimeout = 100
+# Restart policy: on-failure means restart if the app crashes
+restartPolicyType = "ON_FAILURE"
+# Maximum restarts before giving up
+restartPolicyMaxRetries = 5

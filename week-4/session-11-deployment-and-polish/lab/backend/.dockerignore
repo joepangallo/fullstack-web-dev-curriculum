@@ -1,0 +1,55 @@
+# ============================================
+# Docker Ignore File
+# ============================================
+# Similar to .gitignore, this tells Docker which files
+# to EXCLUDE when copying files into the container.
+#
+# Why? Because COPY . . copies EVERYTHING, including
+# files we don't want in our container:
+#   - node_modules (we npm install inside the container)
+#   - .env files (contain secrets!)
+#   - test files (not needed in production)
+#   - uploads (user data shouldn't be baked into the image)
+# ============================================
+
+# Dependencies - installed fresh inside the container
+node_modules
+npm-debug.log*
+
+# Environment files - contain secrets!
+# These should be injected at runtime, not baked into the image
+.env
+.env.*
+.env.local
+.env.test
+
+# Upload directory - user data should use volumes, not the image
+uploads/*
+!uploads/.gitkeep
+
+# Test files - not needed in production
+src/__tests__
+coverage
+jest.config.js
+.env.test
+
+# IDE and OS files
+.vscode
+.idea
+*.swp
+*.swo
+.DS_Store
+Thumbs.db
+
+# Git
+.git
+.gitignore
+
+# Docker files (don't copy docker config into itself)
+Dockerfile
+docker-compose.yml
+.dockerignore
+
+# Documentation (not needed to run the app)
+*.md
+LICENSE

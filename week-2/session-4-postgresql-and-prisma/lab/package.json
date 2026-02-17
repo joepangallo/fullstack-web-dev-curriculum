@@ -1,0 +1,21 @@
+{
+  "name": "session-4-lab-postgresql-prisma",
+  "version": "1.0.0",
+  "description": "Session 4 Lab: Learning PostgreSQL and Prisma ORM fundamentals",
+  "main": "src/prisma.js",
+  "scripts": {
+    "prisma:generate": "npx prisma generate",
+    "prisma:migrate": "npx prisma migrate dev",
+    "prisma:studio": "npx prisma studio",
+    "prisma:seed": "node prisma/seed.js",
+    "prisma:reset": "npx prisma migrate reset"
+  },
+  "keywords": ["postgresql", "prisma", "database", "learning"],
+  "license": "MIT",
+  "dependencies": {
+    "@prisma/client": "^5.20.0"
+  },
+  "devDependencies": {
+    "prisma": "^5.20.0"
+  }
+}

@@ -1,0 +1,108 @@
+# ============================================
+# Docker Compose Configuration
+# ============================================
+# Docker Compose lets you define and run MULTIPLE containers
+# as a single "application." Instead of running three separate
+# docker commands, you run: docker compose up
+#
+# Our application has three services:
+#   1. db       - PostgreSQL database
+#   2. backend  - Express API server
+#   3. frontend - React app served by Nginx
+#
+# Key concepts:
+#   services:     The containers to run
+#   volumes:      Persistent data storage
+#   environment:  Environment variables (like .env)
+#   depends_on:   Start order (db before backend)
+#   ports:        Port mapping (host:container)
+#   networks:     Internal communication between containers
+# ============================================
+
+version: '3.8'
+
+services:
+  # ============================================
+  # PostgreSQL Database
+  # ============================================
+  db:
+    # Official PostgreSQL 15 image
+    image: postgres:15-alpine
+    # Container name for easy reference in logs
+    container_name: taskflow-db
+    # Restart automatically if the container crashes
+    restart: unless-stopped
+    # Environment variables configure PostgreSQL
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: taskflow
+    # Port mapping: access PostgreSQL on localhost:5432
+    # Format: host_port:container_port
+    ports:
+      - '5432:5432'
+    # Persist database data even if the container is removed
+    # Without this, all data is lost when the container stops!
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    # Health check: verify PostgreSQL is ready to accept connections
+    # This is important because depends_on only waits for the
+    # container to START, not for PostgreSQL to be READY
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U postgres']
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  # ============================================
+  # Backend API Server
+  # ============================================
+  backend:
+    # Build from the Dockerfile in ./backend directory
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: taskflow-backend
+    restart: unless-stopped
+    # Environment variables for the backend
+    # Note: "db" in the DATABASE_URL refers to the db service above.
+    # Docker Compose creates a network where services can reach
+    # each other by name (e.g., "db" resolves to the db container's IP)
+    environment:
+      DATABASE_URL: postgresql://postgres:postgres@db:5432/taskflow?schema=public
+      JWT_SECRET: change-this-to-a-secure-random-string
+      PORT: 3001
+      NODE_ENV: production
+    ports:
+      - '3001:3001'
+    # Start the backend AFTER the database is healthy
+    # "condition: service_healthy" waits for the healthcheck to pass
+    depends_on:
+      db:
+        condition: service_healthy
+
+  # ============================================
+  # Frontend (React + Nginx)
+  # ============================================
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: taskflow-frontend
+    restart: unless-stopped
+    ports:
+      # Access the frontend on http://localhost:8080
+      # Maps host port 8080 to container port 80 (Nginx)
+      - '8080:80'
+    # Start frontend after backend is running
+    depends_on:
+      - backend
+
+# ============================================
+# Named Volumes
+# ============================================
+# Named volumes persist data outside of containers.
+# Even if you run "docker compose down", the data remains.
+# To delete volumes too: "docker compose down -v"
+volumes:
+  postgres_data:
